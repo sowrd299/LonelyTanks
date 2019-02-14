@@ -93,11 +93,16 @@ class Game():
     def splash_text(self, text):
         self.splash["text"] = text
 
+
+# RULE IMPLEMENTATIONS:
+# game rules are implemented as functions that get called on a game once per turn
+# they may store their own variables in that game objec if they want to
+
 # adds random values to the value over time
 # increasing delay param will lower the odds of noise happening
 # incresing pink param increase how closely noise will stick to the mean
 # incresing noise mag param will increase 
-def rand_noise(game, delay_param = 10, pink_param = 3, noise_mag_param = 10):
+def rand_noise(game, delay_param = 15, pink_param = 7, noise_mag_param = 8, dynamic_mag = True):
     if not hasattr(game, "time_last_noise"):
         # setup
         game.time_last_noise = time()
@@ -107,11 +112,19 @@ def rand_noise(game, delay_param = 10, pink_param = 3, noise_mag_param = 10):
         if random() < time_since/(delay_param + time_since):
             # apply noise
             sign = -1 if random() < 0.5 else 1
-            noise = int((random()**pink_param) * sign * noise_mag_param)
+            # dynamic magnitude of noise
+            # togglable
+            room_to_move = game.current.get() if sign < 0 else game.current.max - game.current.get()
+            mag = (noise_mag_param/15)*room_to_move if dynamic_mag else noise_mag_param
+            noise = int((random()**pink_param) * sign * mag)
             if noise != 0:
                 game.splash_text("Encounted space noise! "+str(noise)+" Energy")
                 game.current.add(noise)
                 game.time_last_noise = time()
+
+# a rule that occassionally causes the fuel button to stick
+def toggle_sticking(game);
+    pass
 
 if __name__ == "__main__":
     game = Game([rand_noise])
