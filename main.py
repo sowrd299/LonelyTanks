@@ -123,7 +123,7 @@ def rand_noise(game, delay_param = 15, pink_param = 7, noise_mag_param = 8, dyna
                 game.time_last_noise = time()
 
 # a rule that occassionally causes the rate of flow to ramp up slowly
-def slow_toggle(game);
+def slow_toggle(game):
     if not hasattr(game, "time_last_toggle"):
         # setup
         game.time_last_toggle = time()
